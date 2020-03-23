@@ -13,6 +13,14 @@ import javax.annotation.Nonnull;
 
 public abstract class Calendar {
 
+  protected static final DayOfWeek Monday = DayOfWeek.MONDAY;
+  protected static final DayOfWeek Tuesday = DayOfWeek.TUESDAY;
+  protected static final DayOfWeek Wednesday = DayOfWeek.WEDNESDAY;
+  protected static final DayOfWeek Thursday = DayOfWeek.THURSDAY;
+  protected static final DayOfWeek Friday = DayOfWeek.FRIDAY;
+  protected static final DayOfWeek Saturday = DayOfWeek.SATURDAY;
+  protected static final DayOfWeek Sunday = DayOfWeek.SUNDAY;
+
   protected static final Month January = Month.JANUARY;
   protected static final Month February = Month.FEBRUARY;
   protected static final Month March = Month.MARCH;
