@@ -57,10 +57,35 @@ public class CalendarTest {
     fail("not implemented");
   }
 
-  @Disabled
+
   @Test
   void testGermanyFrankfurt() {
-    fail("not implemented");
+    List<LocalDate> expectedHol = new ArrayList<>();
+
+    expectedHol.add(Date(1, January, 2003));
+    expectedHol.add(Date(18, April, 2003));
+    expectedHol.add(Date(21, April, 2003));
+    expectedHol.add(Date(1, May, 2003));
+    expectedHol.add(Date(24, December, 2003));
+    expectedHol.add(Date(25, December, 2003));
+    expectedHol.add(Date(26, December, 2003));
+    expectedHol.add(Date(31, December, 2003));
+
+    expectedHol.add(Date(1, January, 2004));
+    expectedHol.add(Date(9, April, 2004));
+    expectedHol.add(Date(12, April, 2004));
+    expectedHol.add(Date(24, December, 2004));
+    expectedHol.add(Date(31, December, 2004));
+
+    Calendar calendar = new GermanyFrankfurtStockExchange();
+    List<LocalDate> hol = calendar.holidayList(
+        Date(1, January, 2003),
+        Date(31, December, 2004));
+
+    assertEquals(expectedHol.size(), hol.size(), "size");
+    for (int i = 0; i < hol.size(); i++) {
+      assertThat(hol.get(i)).isEqualTo(expectedHol.get(i));
+    }
   }
 
   @Disabled
@@ -69,10 +94,34 @@ public class CalendarTest {
     fail("not implemented");
   }
 
-  @Disabled
   @Test
   void testGermanyEurex() {
-    fail("not implemented");
+    List<LocalDate> expectedHol = new ArrayList<>();
+
+    expectedHol.add(Date(1, January, 2003));
+    expectedHol.add(Date(18, April, 2003));
+    expectedHol.add(Date(21, April, 2003));
+    expectedHol.add(Date(1, May, 2003));
+    expectedHol.add(Date(24, December, 2003));
+    expectedHol.add(Date(25, December, 2003));
+    expectedHol.add(Date(26, December, 2003));
+    expectedHol.add(Date(31, December, 2003));
+
+    expectedHol.add(Date(1, January, 2004));
+    expectedHol.add(Date(9, April, 2004));
+    expectedHol.add(Date(12, April, 2004));
+    expectedHol.add(Date(24, December, 2004));
+    expectedHol.add(Date(31, December, 2004));
+
+    Calendar calendar = new GermanyEurex();
+    List<LocalDate> hol = calendar.holidayList(
+        Date(1, January, 2003),
+        Date(31, December, 2004));
+
+    assertEquals(expectedHol.size(), hol.size(), "size");
+    for (int i = 0; i < hol.size(); i++) {
+      assertThat(hol.get(i)).isEqualTo(expectedHol.get(i));
+    }
   }
 
 
@@ -196,22 +245,22 @@ public class CalendarTest {
   @Test
   void testUSGovernmentBondMarket() {
     List<LocalDate> expectedHol = new ArrayList<>();
-    expectedHol.add(Date(1,January,2004));
-    expectedHol.add(Date(19,January,2004));
-    expectedHol.add(Date(16,February,2004));
-    expectedHol.add(Date(9,April,2004));
-    expectedHol.add(Date(31,May,2004));
-    expectedHol.add(Date(11,June,2004)); // Reagan's funeral
-    expectedHol.add(Date(5,July,2004));
-    expectedHol.add(Date(6,September,2004));
-    expectedHol.add(Date(11,October,2004));
-    expectedHol.add(Date(11,November,2004));
-    expectedHol.add(Date(25,November,2004));
-    expectedHol.add(Date(24,December,2004));
+    expectedHol.add(Date(1, January, 2004));
+    expectedHol.add(Date(19, January, 2004));
+    expectedHol.add(Date(16, February, 2004));
+    expectedHol.add(Date(9, April, 2004));
+    expectedHol.add(Date(31, May, 2004));
+    expectedHol.add(Date(11, June, 2004)); // Reagan's funeral
+    expectedHol.add(Date(5, July, 2004));
+    expectedHol.add(Date(6, September, 2004));
+    expectedHol.add(Date(11, October, 2004));
+    expectedHol.add(Date(11, November, 2004));
+    expectedHol.add(Date(25, November, 2004));
+    expectedHol.add(Date(24, December, 2004));
 
     Calendar calendar = new UnitedStatesGovernmentBond();
-    List<LocalDate> hol = calendar.holidayList(Date(1,January,2004),
-        Date(31,December,2004));
+    List<LocalDate> hol = calendar.holidayList(Date(1, January, 2004),
+        Date(31, December, 2004));
 
     assertEquals(expectedHol.size(), hol.size(), "size");
     for (int i = 0; i < hol.size(); i++) {
