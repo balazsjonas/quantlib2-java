@@ -88,10 +88,34 @@ public class CalendarTest {
     }
   }
 
-  @Disabled
   @Test
   void testGermanyXetra() {
-    fail("not implemented");
+    List<LocalDate> expectedHol = new ArrayList<>();
+
+    expectedHol.add(Date(1,January,2003));
+    expectedHol.add(Date(18,April,2003));
+    expectedHol.add(Date(21,April,2003));
+    expectedHol.add(Date(1,May,2003));
+    expectedHol.add(Date(24,December,2003));
+    expectedHol.add(Date(25,December,2003));
+    expectedHol.add(Date(26,December,2003));
+    expectedHol.add(Date(31,December,2003));
+
+    expectedHol.add(Date(1,January,2004));
+    expectedHol.add(Date(9,April,2004));
+    expectedHol.add(Date(12,April,2004));
+    expectedHol.add(Date(24,December,2004));
+    expectedHol.add(Date(31,December,2004));
+
+    Calendar calendar = new GermanyXetra();
+    List<LocalDate> hol = calendar.holidayList(
+        Date(1,January,2003),
+        Date(31,December,2004));
+
+    assertEquals(expectedHol.size(), hol.size(), "size");
+    for (int i = 0; i < hol.size(); i++) {
+      assertThat(hol.get(i)).isEqualTo(expectedHol.get(i));
+    }
   }
 
   @Test
