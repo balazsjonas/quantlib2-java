@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -567,10 +568,30 @@ public class CalendarTest {
     fail("not implemented");
   }
 
-  @Disabled
+
   @Test
   void testEndOfMonth() {
-    fail("not implemented");
+
+    Calendar c = new TARGET();
+
+    int minimumSerialNumber = 367;// Jan 1st, 1901
+    int maximumSerialNumber = 109574;    // Dec 31st, 2199
+
+    LocalDate counter = LocalDate.of(1901, 1, 1);
+
+    LocalDate last = LocalDate.of(2019, Month.DECEMBER, 31).minusMonths(2);
+
+    SoftAssertions softly = new SoftAssertions();
+    while (!counter.isAfter(last)) {
+      LocalDate eom = c.endOfMonth(counter);
+      assertTrue(c.isEndOfMonth(eom));
+      softly.assertThat(eom.getMonth())
+          .withFailMessage(eom + " is not in the same month as " + counter)
+          .isEqualByComparingTo(counter.getMonth());
+
+      counter = Calendar.incremented(counter);
+    }
+    softly.assertAll();
   }
 
   @Disabled

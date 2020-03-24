@@ -1,5 +1,13 @@
 package quantlib2;
 
+import static quantlib2.BusinessDayConvention.Following;
+import static quantlib2.BusinessDayConvention.HalfMonthModifiedFollowing;
+import static quantlib2.BusinessDayConvention.ModifiedFollowing;
+import static quantlib2.BusinessDayConvention.ModifiedPreceding;
+import static quantlib2.BusinessDayConvention.Nearest;
+import static quantlib2.BusinessDayConvention.Preceding;
+import static quantlib2.BusinessDayConvention.Unadjusted;
+
 import com.google.common.base.Preconditions;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -7,6 +15,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
 
@@ -86,9 +95,91 @@ public abstract class Calendar {
   }
 
 
-  private LocalDate incremented(LocalDate d) {
+  public static LocalDate incremented(@Nonnull LocalDate d) {
     return d.plusDays(1);
   }
 
+  public static LocalDate decremented(@Nonnull LocalDate d) {
+    return d.minusDays(1);
+  }
+
+
+  public LocalDate endOfMonth(LocalDate date) {
+    return adjust(Date.endOfMonth(date), Preceding);
+  }
+
+  public LocalDate adjust(LocalDate date, BusinessDayConvention convention) {
+    Objects.requireNonNull(date, "null date");
+
+    if (convention == Unadjusted) {
+      return date;
+    }
+
+    LocalDate d1 = date;
+    if (convention == Following || convention == ModifiedFollowing
+        || convention == HalfMonthModifiedFollowing) {
+      while (isHoliday(d1)) {
+        d1 = incremented(d1);
+      }
+      if (convention == ModifiedFollowing
+          || convention == HalfMonthModifiedFollowing) {
+        if (d1.getMonth() != date.getMonth()) {
+          return adjust(date, Preceding);
+        }
+        if (convention == HalfMonthModifiedFollowing) {
+          if (date.getDayOfMonth() <= 15 && d1.getDayOfMonth() > 15) {
+            return adjust(date, Preceding);
+          }
+        }
+      }
+    } else if (convention == Preceding || convention == ModifiedPreceding) {
+      while (isHoliday(d1)) {
+        d1 = decremented(d1);
+      }
+      if (convention == ModifiedPreceding && d1.getMonth() != date.getMonth()) {
+        return adjust(date, Following);
+      }
+    } else if (convention == Nearest) {
+      LocalDate d2 = date;
+      while (isHoliday(d1) && isHoliday(d2)) {
+        d1 = incremented(d1);
+        d2 = decremented(d2);
+      }
+      if (isHoliday(d1)) {
+        return d2;
+      } else {
+        return d1;
+      }
+    }
+    return d1;
+  }
+
+  public final LocalDate adjust(LocalDate date) {
+    return adjust(date, Following);
+
+  }
+
+  public boolean isEndOfMonth(LocalDate date) {
+    return (date.getMonth() != adjust(incremented(date)).getMonth());
+  }
+}
+
+class Date {
+
+  private static final int[] MonthLength = {
+      31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+  };
+  private static final int[] MonthLeapLength = {
+      31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+  };
+
+  public static LocalDate endOfMonth(@Nonnull LocalDate date) {
+    return date.withDayOfMonth(monthLength(date));
+  }
+
+  private static int monthLength(@Nonnull LocalDate date) {
+    var month = date.getMonthValue() - 1;
+    return date.isLeapYear() ? MonthLeapLength[month] : MonthLength[month];
+  }
 
 }
