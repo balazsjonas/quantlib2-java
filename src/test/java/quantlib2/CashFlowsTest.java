@@ -42,6 +42,57 @@ public class CashFlowsTest {
     CHECK_INCLUSION(2, 2, false);
     CHECK_INCLUSION(2, 3, false);
 
+    Settings.instance().setIncludeReferenceDateEvents(false);
+    Settings.instance().setIncludeTodaysCashFlows(Optional.of(false));
+    CHECK_INCLUSION(0, 0, false);
+    CHECK_INCLUSION(0, 1, false);
+
+    CHECK_INCLUSION(1, 0, true);
+    CHECK_INCLUSION(1, 1, false);
+    CHECK_INCLUSION(1, 2, false);
+
+    CHECK_INCLUSION(2, 1, true);
+    CHECK_INCLUSION(2, 2, false);
+    CHECK_INCLUSION(2, 3, false);
+
+    Settings.instance().setIncludeReferenceDateEvents(true);
+    Settings.instance().setIncludeTodaysCashFlows(Optional.empty());
+    CHECK_INCLUSION(0, 0, true);
+    CHECK_INCLUSION(0, 1, false);
+
+    CHECK_INCLUSION(1, 0, true);
+    CHECK_INCLUSION(1, 1, true);
+    CHECK_INCLUSION(1, 2, false);
+
+    CHECK_INCLUSION(2, 1, true);
+    CHECK_INCLUSION(2, 2, true);
+    CHECK_INCLUSION(2, 3, false);
+
+    Settings.instance().setIncludeReferenceDateEvents(true);
+    Settings.instance().setIncludeTodaysCashFlows(Optional.of(true));
+    CHECK_INCLUSION(0, 0, true);
+    CHECK_INCLUSION(0, 1, false);
+
+    CHECK_INCLUSION(1, 0, true);
+    CHECK_INCLUSION(1, 1, true);
+    CHECK_INCLUSION(1, 2, false);
+
+    CHECK_INCLUSION(2, 1, true);
+    CHECK_INCLUSION(2, 2, true);
+    CHECK_INCLUSION(2, 3, false);
+
+    Settings.instance().setIncludeReferenceDateEvents(true);
+    Settings.instance().setIncludeTodaysCashFlows(Optional.of(false));
+    CHECK_INCLUSION(0, 0, false);
+    CHECK_INCLUSION(0, 1, false);
+
+    CHECK_INCLUSION(1, 0, true);
+    CHECK_INCLUSION(1, 1, true);
+    CHECK_INCLUSION(1, 2, false);
+
+    CHECK_INCLUSION(2, 1, true);
+    CHECK_INCLUSION(2, 2, true);
+    CHECK_INCLUSION(2, 3, false);
   }
 
   static void CHECK_INCLUSION(int n, int days, boolean expected) {

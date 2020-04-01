@@ -29,22 +29,67 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
   @Override
   public boolean hasOccurred(LocalDate refDate, Optional<Boolean> includeRefDate) {
 
+    boolean includeReferenceDateEvents = Settings.instance().includeReferenceDateEvents();
+    Optional<Boolean> includeTodaysCashFlows = Settings.instance().includeTodaysCashFlows();
+
+    if (!includeReferenceDateEvents) {
+      if (includeTodaysCashFlows.isEmpty() || !includeTodaysCashFlows.get()) {
+        if (date().isEqual(refDate)) {
+          return false;
+        }
+        if (date().isAfter(refDate)) {
+          return true;
+        }
+        if (date().isBefore(refDate)) {
+          return false;
+        }
+      }
+    } else {
+      if (includeTodaysCashFlows.isEmpty()) {
+        if (date().isAfter(refDate) || date().isEqual(refDate)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      if (includeTodaysCashFlows.isPresent() && includeTodaysCashFlows.get()) {
+        if (date().isBefore(refDate)) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+      if (includeTodaysCashFlows.isPresent() && !includeTodaysCashFlows.get()) {
+        if (date().isBefore(refDate)) {
+          return false;
+        }
+        if (date().isAfter(refDate)) {
+          return true;
+        }
+        var today = Settings.instance().evaluationDate().value();
+        if (refDate.isEqual(today)) {
+          return false;
+        }else {
+          return true;
+        }
+      }
+    }
     // easy and quick handling of most cases
-    if(refDate != null) {
+    if (refDate != null) {
       LocalDate cf = date();
-      if(refDate.isBefore(cf)) {
+      if (refDate.isBefore(cf)) {
         return false;
       }
-      if(cf.isBefore(refDate)) {
+      if (cf.isBefore(refDate)) {
         return true;
       }
     }
 
-    if(refDate == null || refDate.isEqual(Settings.instance().evaluationDate().value())) {
+    if (refDate == null || refDate.isEqual(Settings.instance().evaluationDate().value())) {
       // today's date; we override the bool with the one
       // specified in the settings (if any)
       Optional<Boolean> includeToday = Settings.instance().includeTodaysCashFlows();
-      if(includeToday.isPresent()) {
+      if (includeToday.isPresent()) {
         includeRefDate = includeToday;
       }
 
